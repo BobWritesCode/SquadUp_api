@@ -75,8 +75,6 @@ INSTALLED_APPS = [
     'profiles',
 ]
 
-AUTH_USER_MODEL = 'profiles.Profiles'
-
 SITE_ID = 1
 
 MIDDLEWARE = [

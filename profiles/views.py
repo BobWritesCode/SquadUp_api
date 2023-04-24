@@ -10,7 +10,7 @@ class ProfileList(generics.ListAPIView):
     List all profiles.
     No create view as profile creation is handled by django signals.
     """
-    queryset = Profiles.objects.annotate().order_by('-username')
+    queryset = Profiles.objects.annotate().order_by('-owner')
     serializer_class = ProfileSerializer
     filter_backends = [
         filters.OrderingFilter
@@ -23,4 +23,4 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
-    queryset = Profiles.objects.annotate().order_by('-date_joined')
+    queryset = Profiles.objects.annotate().order_by('-owner')
