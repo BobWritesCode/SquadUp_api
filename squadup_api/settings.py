@@ -57,27 +57,25 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # cloudinary
     'cloudinary',
-
     # dj-rest
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
-
-    #dh-rest-registration
+    # dj-rest-registration
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
-
     # Simple JWT
     'rest_framework_simplejwt',
-
     # corsheaders
     'corsheaders',
-
+    # apps
     'profiles',
 ]
+
+AUTH_USER_MODEL = 'profiles.Profiles'
 
 SITE_ID = 1
 
