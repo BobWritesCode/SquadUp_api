@@ -39,7 +39,7 @@ CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
 }
 
-MEDIA_URL ='/media/'
+MEDIA_URL ='/squadup/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Application definition
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     # cloudinary
     'cloudinary_storage',
+    # django-filter
+    'django_filters',
     # default
     'django.contrib.staticfiles',
     # cloudinary
@@ -73,6 +75,7 @@ INSTALLED_APPS = [
     'corsheaders',
     # apps
     'profiles',
+    'posts',
 ]
 
 SITE_ID = 1
