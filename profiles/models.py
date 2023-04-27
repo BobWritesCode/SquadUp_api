@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
 
-class Profiles(models.Model):
+class Profile(models.Model):
 
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     email_verified = models.BooleanField(default=False)
@@ -21,7 +21,7 @@ class Profiles(models.Model):
 
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profiles.objects.create(owner=instance)
+        Profile.objects.create(owner=instance)
 
 
 post_save.connect(create_profile, sender=User)

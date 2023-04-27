@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profiles
+from .models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -11,7 +11,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
     class Meta:
-        model = Profiles
+        model = Profile
         fields = [
             'id',
             'owner',
