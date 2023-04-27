@@ -181,6 +181,10 @@ if 'CLIENT_ORIGIN_DEV' in os.environ:
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        # Django rest framework authentication
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        # Front end authentication.
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS':
