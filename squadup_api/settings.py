@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     # apps
     'profiles',
     'posts',
+    'user_notes',
 ]
 
 SITE_ID = 1
