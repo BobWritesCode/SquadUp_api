@@ -25,4 +25,6 @@ urlpatterns = [
     path('', include('profiles.urls')),
     path('', include('posts.urls')),
     path('', include('user_notes.urls')),
+    path('', include('lfg.urls')),
+    path('', include('lfg_slots.urls')),
 ]

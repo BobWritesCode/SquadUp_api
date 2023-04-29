@@ -77,6 +77,8 @@ INSTALLED_APPS = [
     'profiles',
     'posts',
     'user_notes',
+    'lfg',
+    'lfg_slots',
 ]
 
 SITE_ID = 1
