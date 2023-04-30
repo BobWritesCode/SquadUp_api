@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'user_notes',
     'lfg',
     'lfg_slots',
+    'lfg_slots_apply',
 ]
 
 SITE_ID = 1
