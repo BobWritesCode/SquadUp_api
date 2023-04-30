@@ -40,4 +40,4 @@ class LFG(models.Model):
             raise ValidationError('Current team size must be smaller then max team size.')
 
     def __str__(self):
-        return f'{self.owner.username} - {self.game_type}'
+        return f'{self.id} - {self.owner.username} - {self.game_type}'

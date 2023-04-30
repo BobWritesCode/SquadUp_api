@@ -14,6 +14,7 @@ class LFG_SlotSerializer(serializers.ModelSerializer):
         model = LFG_Slot
         fields = [
             'id',
+            'Lfg',
             'role',
             'status',
             'content',
