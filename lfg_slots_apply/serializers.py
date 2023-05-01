@@ -21,4 +21,5 @@ class LFGSlotApplySerializer(serializers.ModelSerializer):
             'created_at',
             'owner',
             'is_owner',
+            'status',
         ]

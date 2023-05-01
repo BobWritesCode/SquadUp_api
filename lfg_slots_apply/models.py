@@ -22,6 +22,12 @@ RANK_CHOICES = (
     ('Radiant', 'Radiant'),
 )
 
+STATUS_CHOICES = (
+    ('Awaiting', 'Awaiting'),
+    ('Accept', 'Accept'),
+    ('Reject', 'Reject'),
+)
+
 class LFGSlotApply(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,6 +35,7 @@ class LFGSlotApply(models.Model):
     role = models.CharField(choices=ROLE_CHOICES, max_length=10, blank=False, default='Any')
     rank = models.CharField(choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
     content = models.TextField(blank=True)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=8, blank=False, default='Awaiting')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
