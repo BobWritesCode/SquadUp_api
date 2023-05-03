@@ -176,6 +176,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+
 if 'CLIENT_ORIGIN_DEV' in os.environ:
     CORS_ORIGIN_WHITELIST = [
         os.environ.get('CLIENT_ORIGIN_DEV'),
@@ -207,6 +210,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
+# Renders as JSON in DEV not inside environment vars
 if 'DEV' not in os.environ:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
