@@ -176,13 +176,20 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = [
-    os.environ.get('CLIENT_ORIGIN'),
-]
-
 if 'CLIENT_ORIGIN_DEV' in os.environ:
+    CORS_ORIGIN_WHITELIST = [
+        os.environ.get('CLIENT_ORIGIN_DEV'),
+        os.environ.get('CLIENT_ORIGIN'),
+    ]
     CORS_ALLOWED_ORIGIN_REGEXES = [
         os.environ.get('CLIENT_ORIGIN_DEV'),
+        os.environ.get('CLIENT_ORIGIN')
+    ]
+else:
+    CORS_ORIGIN_WHITELIST = [
+        os.environ.get('CLIENT_ORIGIN'),
+    ]
+    CORS_ALLOWED_ORIGIN_REGEXES = [
         os.environ.get('CLIENT_ORIGIN')
     ]
 
