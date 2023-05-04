@@ -12,6 +12,7 @@ class Profile(models.Model):
     image = models.ImageField(
         upload_to='images/', default='default/awaiting_image_lcpknr'
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-owner']

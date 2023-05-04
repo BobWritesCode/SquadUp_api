@@ -17,5 +17,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             'owner',
             'tracker',
             'image',
+            'created_at',
             'is_owner',
         ]
