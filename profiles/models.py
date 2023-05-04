@@ -10,7 +10,7 @@ class Profile(models.Model):
     is_banned = models.BooleanField(default=False)
     tracker = models.CharField(max_length=255, blank=True)
     image = models.ImageField(
-        upload_to='images/', default='squad_up/default_profile_n8u8ru'
+        upload_to='images/', default='default/awaiting_image_lcpknr'
     )
 
     class Meta:
