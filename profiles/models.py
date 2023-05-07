@@ -10,7 +10,7 @@ class Profile(models.Model):
     is_banned = models.BooleanField(default=False)
     tracker = models.CharField(max_length=255, blank=True)
     image = models.ImageField(
-        upload_to='images/', default='default/awaiting_image_lcpknr'
+        upload_to='avatars/', default='default/awaiting_image_lcpknr'
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
