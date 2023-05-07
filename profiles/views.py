@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from cloudinary import uploader
 import urllib.parse
 
 class ProfileList(generics.ListAPIView):
@@ -48,6 +49,29 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
                     'tracker': ['Tracker updated.'],
                     'response': [s],
                 }, status=200)
+
+            if image:
+                if profile.image is not None and request.FILES:
+                    # Delete old image from Cloudinary server
+                    try:
+                        uploader.destroy(str(profile.image))
+                    except:
+                        pass
+
+                if request.FILES:
+                    # Upload new image
+                    new_image = uploader.upload(
+                        request.FILES['image'],
+                        folder="squadup/avatars/",
+                        allowed_formats=['jpg', 'png', 'jpeg'],
+                        format='jpg'
+                    )
+                    serializer.validated_data['image'] = new_image['public_id']
+                    serializer.save()
+                    return JsonResponse({
+                        'success': ['Avatar updated successfully.'],
+                        'url': [new_image['url']],
+                    }, status=200)
 
             return JsonResponse({
                 'non_field_errors': ['Form is missing information.'],
