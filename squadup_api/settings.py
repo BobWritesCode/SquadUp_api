@@ -219,6 +219,9 @@ if 'DEV' not in os.environ:
     ]
 
 REST_AUTH = {
+    'OLD_PASSWORD_FIELD_ENABLED': True,
+    'LOGOUT_ON_PASSWORD_CHANGE': False,
+
     'USE_JWT': True,
     'JWT_AUTH_COOKIE': 'squadup-auth',
     'JWT_AUTH_REFRESH_COOKIE': 'squadup-refresh-token',
