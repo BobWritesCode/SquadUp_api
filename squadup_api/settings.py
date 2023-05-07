@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from datetime import timedelta
 
 if os.path.exists('env.py'):
     import env
@@ -203,6 +204,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         # Front end authentication.
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
@@ -225,4 +227,8 @@ REST_AUTH = {
     'JWT_AUTH_SAMESITE': 'None',
     'USER_DETAILS_SERIALIZER': 'squadup_api.serializers.CurrentUserSerializer',
     'JWT_AUTH_RETURN_EXPIRATION': True,
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
 }
