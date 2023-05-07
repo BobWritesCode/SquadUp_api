@@ -97,6 +97,7 @@ MIDDLEWARE = [
     # corsheaders
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "corsheaders.middleware.CorsPostCsrfMiddleware",
 ]
 
 ROOT_URLCONF = 'squadup_api.urls'
@@ -177,25 +178,19 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
+CORS_REPLACE_HTTPS_REFERER = True
 
-if 'CLIENT_ORIGIN_DEV' in os.environ:
-    CORS_ORIGIN_WHITELIST = [
-        os.environ.get('CLIENT_ORIGIN_DEV'),
-        os.environ.get('CLIENT_ORIGIN'),
-    ]
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        os.environ.get('CLIENT_ORIGIN_DEV'),
-        os.environ.get('CLIENT_ORIGIN')
-    ]
-else:
-    CORS_ORIGIN_WHITELIST = [
-        os.environ.get('CLIENT_ORIGIN'),
-    ]
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        os.environ.get('CLIENT_ORIGIN')
-    ]
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get('CLIENT_ORIGIN_DEV'),
+    os.environ.get('CLIENT_ORIGIN'),
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    os.environ.get('CLIENT_ORIGIN_DEV'),
+    os.environ.get('CLIENT_ORIGIN'),
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -223,13 +218,16 @@ REST_AUTH = {
     'LOGOUT_ON_PASSWORD_CHANGE': False,
 
     'USE_JWT': True,
+
     'JWT_AUTH_COOKIE': 'squadup-auth',
     'JWT_AUTH_REFRESH_COOKIE': 'squadup-refresh-token',
-    'JWT_AUTH_HTTPONLY': False,
     'JWT_AUTH_SECURE': True,
+    'JWT_AUTH_HTTPONLY': False,
     'JWT_AUTH_SAMESITE': 'None',
     'USER_DETAILS_SERIALIZER': 'squadup_api.serializers.CurrentUserSerializer',
     'JWT_AUTH_RETURN_EXPIRATION': True,
+    'JWT_AUTH_COOKIE_ENFORCE_CSRF_ON_UNAUTHENTICATED': False,
+}
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
