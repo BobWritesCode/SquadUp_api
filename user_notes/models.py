@@ -5,7 +5,7 @@ class UserNote(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     target_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='target_user')
-    content = models.TextField(blank=True)
+    content = models.TextField(blank=True, max_length=200)
 
     class Meta:
         ordering = ['-id']
