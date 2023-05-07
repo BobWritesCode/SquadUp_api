@@ -7,6 +7,8 @@ from .serializers import ProfileSerializer
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+import urllib.parse
 
 class ProfileList(generics.ListAPIView):
     """
@@ -27,6 +29,29 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
     queryset = Profile.objects.annotate().order_by('-owner')
+
+    def put(self, request, *args, **kwargs):
+
+        user = User.objects.get(pk=request.user.id)
+        profile = get_object_or_404(Profile, owner=user)
+        serializer = self.serializer_class(profile, data=request.data)
+
+        if serializer.is_valid():
+            image = serializer.validated_data.get('image')
+            tracker = serializer.validated_data.get('tracker')
+
+            if tracker:
+                s = urllib.parse.quote_plus(tracker, safe='')
+                serializer.validated_data['tracker'] = str(s)
+                serializer.save()
+                return JsonResponse({
+                    'tracker': ['Tracker updated.'],
+                    'response': [s],
+                }, status=200)
+
+            return JsonResponse({
+                'non_field_errors': ['Form is missing information.'],
+            }, status=400)
 
 
 @csrf_exempt
