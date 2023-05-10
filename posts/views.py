@@ -18,10 +18,10 @@ class PostList(generics.ListCreateAPIView):
         DjangoFilterBackend,
     ]
     filterset_fields = [
-        'owner__profile',
+        'owner',
     ]
     search_fields = [
-        'owner__username',
+        'owner',
     ]
     ordering_fields = [
     ]
