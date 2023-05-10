@@ -34,6 +34,7 @@ class Post(models.Model):
         """
         # Remove whitespaces at beginning and end of string.
         self.content.strip()
+        # Remove any malicious html tags.
         self.content = bleach.clean(self.content)
         if len(self.content) > 400:
             raise ValidationError(
@@ -48,4 +49,4 @@ class Post(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.id} {self.title}'
+        return f'{self.id} {self.owner}'
