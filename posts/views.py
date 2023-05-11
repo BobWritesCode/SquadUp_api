@@ -147,3 +147,31 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
                 return JsonResponse({
                     'non_field_errors': ['Unknown error (African buffalo)'],
                 }, status=400)
+
+    def perform_destroy(self, instance):
+        """
+        Delete a post object from API request.
+
+        Decorators:
+            None
+        Args:
+            None
+        Returns:
+            JsonResponse - Response provides feedback to request.
+        """
+        try:
+            if instance.image:
+                # Delete image from cloudinary storage.
+                uploader.destroy(str(instance.image))
+            # Call the parent class to delete the object
+            super().perform_destroy(instance)
+
+            return JsonResponse({
+                'success': ['Post Deleted'],
+            }, status=204)
+
+        except Exception as err:
+            print(err)
+            return JsonResponse({
+                'non_field_errors': ['Unknown error (African Bush Elephant)'],
+            }, status=400)
