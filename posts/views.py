@@ -113,3 +113,37 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
                 'success': ['Posted'],
                 'postID': new_post.pk,
             }, status=200)
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            try:
+                instance.content = request.data.get(
+                    'content', instance.content)
+                # Call the clean method of the instance
+                instance.clean()
+                self.perform_update(serializer)
+                print(serializer.data)
+
+                return JsonResponse({
+                    'success': ['Post updated'],
+                    'post': serializer.data,
+
+                }, status=200)
+
+            except ValidationError as err:
+                errorList = []
+                for e in err:
+                    errorList.append(e[1])
+                return JsonResponse({
+                    'non_field_errors': errorList,
+                }, status=400)
+
+            except Exception as err:
+                print(err)
+                return JsonResponse({
+                    'non_field_errors': ['Unknown error (African buffalo)'],
+                }, status=400)
