@@ -18,8 +18,19 @@ class LFGList(generics.ListCreateAPIView):
     ordering_fields = [
     ]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return JsonResponse(serializer.data, status="201")
+        else:
+            return JsonResponse(serializer.errors, status="400")
+
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        try:
+            serializer.save(owner_id=self.request.user.id)
+        except Exception as err:
+            print(err)
 
 
 class LFGDetail(generics.RetrieveUpdateDestroyAPIView):

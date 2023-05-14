@@ -35,9 +35,15 @@ class LFG(models.Model):
         ordering = ['-id']
 
     def clean(self):
-        print(self.current_team_size)
-        if self.current_team_size >= self.max_team_size :
-            raise ValidationError('Current team size must be smaller then max team size.')
+        # defaultdict auto creates key first time it is accessed.
+        errors = defaultdict(list)
+        # Check current team size is smaller then man team size.
+        if self.current_team_size >= self.max_team_size:
+            errors["current_team_size"].append('Current team size must be smaller then max team size.')
+        # If any errors, raise ValidationError
+        if errors:
+            raise ValidationError(errors)
+
 
     def __str__(self):
         return f'{self.id} - {self.owner.username} - {self.game_type}'

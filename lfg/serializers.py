@@ -10,6 +10,12 @@ class LFGSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.owner
 
+    def validate(self, data):
+        print('Validating data')
+        instance = LFG(**data)
+        instance.clean()  # Perform model's clean function
+        return data
+
     class Meta:
         model = LFG
         fields = [
