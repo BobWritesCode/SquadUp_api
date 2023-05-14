@@ -2,34 +2,41 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
+from collections import defaultdict
 
 GAME_TYPE_CHOICES = (
-    ('Competitive', 'Competitive'),
-    ('Tournament', 'Tournament'),
-    ('Casual', 'Casual'),
+    ('1', 'Competitive'),
+    ('2', 'Tournament'),
+    ('3', 'Casual'),
 )
 
 RANK_CHOICES = (
-    ('Iron', 'Iron'),
-    ('Bronze', 'Bronze'),
-    ('Silver', 'Silver'),
-    ('Gold', 'Gold'),
-    ('Platinum', 'Platinum'),
-    ('Diamond', 'Diamond'),
-    ('Ascendant', 'Ascendant'),
-    ('Immortal', 'Immortal'),
-    ('Radiant', 'Radiant'),
+    ('1', 'Iron'),
+    ('2', 'Bronze'),
+    ('3', 'Silver'),
+    ('4', 'Gold'),
+    ('5', 'Platinum'),
+    ('6', 'Diamond'),
+    ('7', 'Ascendant'),
+    ('8', 'Immortal'),
+    ('9', 'Radiant'),
 )
+
 
 class LFG(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    game_type = models.CharField(choices=GAME_TYPE_CHOICES, max_length=11, blank=False, default='Competitive')
-    max_team_size = models.IntegerField(validators=[MinValueValidator(2), MaxValueValidator(10)])
-    current_team_size = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(9)])
-    lowest_rank = models.CharField(choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
-    highest_rank = models.CharField(choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
-    content = models.TextField(blank=True)
+    game_type = models.CharField(
+        choices=GAME_TYPE_CHOICES, max_length=11, blank=False, default='Competitive')
+    max_team_size = models.IntegerField(
+        validators=[MinValueValidator(2), MaxValueValidator(10)], blank=False)
+    current_team_size = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)], blank=False)
+    lowest_rank = models.CharField(
+        choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
+    highest_rank = models.CharField(
+        choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
+    content = models.TextField(blank=True, max_length=200)
 
     class Meta:
         ordering = ['-id']
