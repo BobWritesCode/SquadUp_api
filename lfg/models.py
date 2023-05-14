@@ -40,6 +40,9 @@ class LFG(models.Model):
         # Check current team size is smaller then man team size.
         if self.current_team_size >= self.max_team_size:
             errors["current_team_size"].append('Current team size must be smaller then max team size.')
+        # Check min rank is lower than max rank.
+        if self.lowest_rank >= self.highest_rank:
+            errors["highest_rank"].append('Maximum rank must be same or higher than minimum rank.')
         # If any errors, raise ValidationError
         if errors:
             raise ValidationError(errors)
