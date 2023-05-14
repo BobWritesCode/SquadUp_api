@@ -1,5 +1,4 @@
 import re
-from django.db.models import Count
 from rest_framework import generics, filters
 from squadup_api.permissions import IsOwnerOrReadOnly
 from .models import Profile
