@@ -46,14 +46,18 @@ class LFG(models.Model):
         errors = defaultdict(list)
         # Check current team size is smaller then man team size.
         if self.current_team_size >= self.max_team_size:
-            errors["current_team_size"].append('Current team size must be smaller then max team size.')
+            errors["current_team_size"].append(
+                'Current team size must be smaller then max team size.')
         # Check min rank is lower than max rank.
-        if self.lowest_rank >= self.highest_rank:
-            errors["highest_rank"].append('Maximum rank must be same or higher than minimum rank.')
+        if self.lowest_rank > self.highest_rank:
+            errors["highest_rank"].append(
+                'Maximum rank must be same or higher than minimum rank.')
+        # Check there is at least 1 slot open.
+        if self.max_team_size == self.current_team_size:
+            errors["slots"].append('You must have at least 1 slot.')
         # If any errors, raise ValidationError
         if errors:
             raise ValidationError(errors)
-
 
     def __str__(self):
         return f'{self.id} - {self.owner.username} - {self.game_type}'
