@@ -30,3 +30,9 @@ class LFG_Slot(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.role}'
+
+    @classmethod
+    def create(cls, owner, Lfg, role='Any', content='', status='Open'):
+        slot = cls(owner=owner, Lfg=Lfg, role=role,
+                   content=content, status=status)
+        return slot
