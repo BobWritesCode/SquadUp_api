@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from cloudinary import uploader
 from django.core import serializers
 
+
 class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -25,6 +26,54 @@ class PostList(generics.ListCreateAPIView):
     ]
     ordering_fields = [
     ]
+
+    def create(self, request, *args, **kwargs):
+        """
+        Creates new post object from API request.
+
+        Decorators:
+            None
+        Args:
+            None
+        Returns:
+            JsonResponse - Response provides feedback to request.
+        """
+        image = None
+        if request.FILES:
+            # Upload new image to cloudinary.
+            new_image = uploader.upload(
+                request.FILES['image'],
+                folder="squadup/post_images/",
+                allowed_formats=['jpg', 'png', 'jpeg'],
+                format='jpg'
+            )
+            image = new_image['public_id']
+
+        try:
+            content = request.data['content']
+            new_post = Post.create(
+                owner=request.user, content=content, image=image)
+            new_post.clean()
+            new_post.save()
+
+        except ValidationError as err:
+            errorList = []
+            for e in err:
+                errorList.append(e[1])
+            return JsonResponse({
+                'non_field_errors': errorList,
+            }, status=400)
+
+        except Exception as err:
+            return JsonResponse({
+                'non_field_errors': ['Unknown error (Afghan Hound)'],
+            }, status=400)
+
+        else:
+            return JsonResponse({
+                'success': ['Posted'],
+                'postID': new_post.pk,
+            }, status=200)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -60,7 +109,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
                 url = ''
             return JsonResponse({
                 'success': [''],
-                'post': serializers.serialize('json', [ queryset, ]),
+                'post': serializers.serialize('json', [queryset, ]),
                 'imageURL': url,
             }, status=200)
         except Exception as err:
@@ -69,10 +118,9 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
                 'non_field_errors': [err],
             }, status=400)
 
-
-    def put(self, request, *args, **kwargs):
+    def partial_update(self, request, *args, **kwargs):
         """
-        Creates new post object from API request.
+        Updates a post object from API request.
 
         Decorators:
             None
@@ -81,40 +129,6 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
         Returns:
             JsonResponse - Response provides feedback to request.
         """
-        image = None
-        if request.FILES:
-            # Upload new image to cloudinary.
-            new_image = uploader.upload(
-                request.FILES['image'],
-                folder="squadup/post_images/",
-                allowed_formats=['jpg', 'png', 'jpeg'],
-                format='jpg'
-            )
-            image = new_image['public_id']
-        try:
-            content = request.data['content']
-            new_post = Post.create(
-                owner=request.user, content=content, image=image)
-            new_post.clean()
-            new_post.save()
-        except ValidationError as err:
-            errorList = []
-            for e in err:
-                errorList.append(e[1])
-            return JsonResponse({
-                'non_field_errors': errorList,
-            }, status=400)
-        except Exception as err:
-            return JsonResponse({
-                'non_field_errors': ['Unknown error (Afghan Hound)'],
-            }, status=400)
-        else:
-            return JsonResponse({
-                'success': ['Posted'],
-                'postID': new_post.pk,
-            }, status=200)
-
-    def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(
             instance, data=request.data, partial=True)
@@ -126,12 +140,9 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
                 # Call the clean method of the instance
                 instance.clean()
                 self.perform_update(serializer)
-                print(serializer.data)
-
                 return JsonResponse({
                     'success': ['Post updated'],
                     'post': serializer.data,
-
                 }, status=200)
 
             except ValidationError as err:
