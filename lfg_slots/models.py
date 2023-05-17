@@ -20,7 +20,7 @@ STATUS_CHOICES = (
 class LFG_Slot(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    Lfg = models.ForeignKey(LFG, on_delete=models.CASCADE)
+    lfg = models.ForeignKey(LFG, on_delete=models.CASCADE)
     role = models.CharField(choices=ROLE_CHOICES,
                             max_length=10, blank=False, default='Any')
     status = models.CharField(choices=STATUS_CHOICES,
@@ -35,7 +35,7 @@ class LFG_Slot(models.Model):
         return f'{self.id} - {self.role}'
 
     @classmethod
-    def create(cls, owner, Lfg, role='Any', content='', status='Open'):
-        slot = cls(owner=owner, Lfg=Lfg, role=role,
+    def create(cls, owner, lfg, role='Any', content='', status='Open'):
+        slot = cls(owner=owner, lfg=lfg, role=role,
                    content=content, status=status)
         return slot
