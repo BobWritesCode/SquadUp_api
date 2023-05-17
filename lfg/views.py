@@ -44,6 +44,7 @@ class LFGList(generics.ListCreateAPIView):
             slot.save()
         # Feedback status 200 if all okay.
         return JsonResponse({
+            "slot_id": instance.pk,
             "status": "OK"
         }, status="201")
 

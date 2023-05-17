@@ -11,15 +11,16 @@ ROLE_CHOICES = (
 )
 
 RANK_CHOICES = (
-    ('Iron', 'Iron'),
-    ('Bronze', 'Bronze'),
-    ('Silver', 'Silver'),
-    ('Gold', 'Gold'),
-    ('Platinum', 'Platinum'),
-    ('Diamond', 'Diamond'),
-    ('Ascendant', 'Ascendant'),
-    ('Immortal', 'Immortal'),
-    ('Radiant', 'Radiant'),
+    ('0', 'Unranked'),
+    ('1', 'Iron'),
+    ('2', 'Bronze'),
+    ('3', 'Silver'),
+    ('4', 'Gold'),
+    ('5', 'Platinum'),
+    ('6', 'Diamond'),
+    ('7', 'Ascendant'),
+    ('8', 'Immortal'),
+    ('9', 'Radiant'),
 )
 
 STATUS_CHOICES = (
@@ -28,14 +29,18 @@ STATUS_CHOICES = (
     ('Reject', 'Reject'),
 )
 
+
 class LFGSlotApply(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     slot = models.ForeignKey(LFG_Slot, on_delete=models.CASCADE)
-    role = models.CharField(choices=ROLE_CHOICES, max_length=10, blank=False, default='Any')
-    rank = models.CharField(choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
+    role = models.CharField(choices=ROLE_CHOICES,
+                            max_length=10, blank=False, default='Any')
+    rank = models.CharField(choices=RANK_CHOICES,
+                            max_length=9, blank=False, default='0')
     content = models.TextField(blank=True)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=8, blank=False, default='Awaiting')
+    status = models.CharField(choices=STATUS_CHOICES,
+                              max_length=8, blank=False, default='Awaiting')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
