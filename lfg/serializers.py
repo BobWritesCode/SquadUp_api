@@ -28,4 +28,5 @@ class LFGSerializer(serializers.ModelSerializer):
             'highest_rank',
             'content',
             'is_owner',
+            'status',
         ]

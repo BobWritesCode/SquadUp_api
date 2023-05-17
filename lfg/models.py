@@ -37,6 +37,7 @@ class LFG(models.Model):
     highest_rank = models.CharField(
         choices=RANK_CHOICES, max_length=9, blank=False, default='Iron')
     content = models.TextField(blank=True, max_length=200)
+    status = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-id']

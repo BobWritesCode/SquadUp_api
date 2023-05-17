@@ -15,8 +15,10 @@ class LFGList(generics.ListCreateAPIView):
     filter_backends = [
     ]
     filterset_fields = [
+        'owner', 'status',
     ]
     search_fields = [
+        'owner', 'status',
     ]
     ordering_fields = [
     ]
