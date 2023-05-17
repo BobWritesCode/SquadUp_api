@@ -6,7 +6,6 @@ from lfg_slots.models import LFG_Slot
 class LFG_SlotSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     created_at = serializers.SerializerMethodField()
-    updated_at = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
 
     def get_created_at(self, obj):
@@ -23,7 +22,7 @@ class LFG_SlotSerializer(serializers.ModelSerializer):
         model = LFG_Slot
         fields = [
             'id',
-            'Lfg',
+            'lfg',
             'role',
             'status',
             'content',
