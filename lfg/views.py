@@ -37,7 +37,7 @@ class LFGList(generics.ListCreateAPIView):
         # Create slots and add to database
         for slot in slots:
             slot = LFG_Slot.create(
-                owner=request.user, Lfg=instance, role=slot['role'],
+                owner=request.user, lfg=instance, role=slot['role'],
                 content=slot['content'])
             slot.save()
         # Feedback status 200 if all okay.
