@@ -1,10 +1,12 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from squadup_api.permissions import IsOwnerOrReadOnly
 from .models import LFG
 from lfg_slots.models import LFG_Slot
 from .serializers import LFGSerializer
 from django.http import JsonResponse
 import json
+from django.core import serializers
 
 
 class LFGList(generics.ListCreateAPIView):
@@ -13,6 +15,9 @@ class LFGList(generics.ListCreateAPIView):
     queryset = LFG.objects.all().order_by('-id')
 
     filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend,
     ]
     filterset_fields = [
         'owner', 'status',
