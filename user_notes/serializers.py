@@ -10,6 +10,12 @@ class UserNoteSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.owner
 
+    def validate(self, data):
+        instance = UserNote(**data)
+        # Perform model's clean function
+        instance.clean()
+        return data
+
     class Meta:
         model = UserNote
         fields = [
