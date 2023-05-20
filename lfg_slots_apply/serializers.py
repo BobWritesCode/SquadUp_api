@@ -30,6 +30,7 @@ class LFGSlotApplySerializer(serializers.ModelSerializer):
             'role',
             'rank',
             'content',
+            'reply_content',
             'created_at',
             'owner',
             'ownerID',

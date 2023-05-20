@@ -64,6 +64,9 @@ class LFGSlotApply(models.Model):
             errors['content'].append('Max length is 100 characters.')
         if len(self.reply_content) > 100:
             errors['reply_content'].append('Max length is 100 characters.')
+        if len(self.reply_content) < 10:
+            errors['reply_content'].append(
+                'You should provide some instructions so the person can join your team. (minimum of 10 characters)')
         # If any above errors, raise ValidationError
         if errors:
             raise ValidationError(errors)

@@ -36,7 +36,7 @@ class LFGSlotApplyPagination(generics.ListAPIView):
         filters.SearchFilter,
         DjangoFilterBackend
     ]
-    filterset_fields = ['slot', 'owner', 'status']
+    filterset_fields = ['id', 'slot', 'owner', 'status']
     search_fields = ['slot', 'owner', 'status']
     ordering_fields = []
     pagination_class = pagination.LimitOffsetPagination
@@ -87,3 +87,31 @@ class LFGSlotUpdateDetail(generics.RetrieveUpdateAPIView):
     serializer_class = LFGSlotApplySerializer
     permission_classes = [IsGroupOwnerOrReadOnly]
     queryset = LFGSlotApply.objects.annotate().order_by('-id')
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Crate a mutable copy of the request data
+        mutable_data = request.POST.copy()
+        mutable_data['reply_content'] = bleach.clean(
+            request.data.get('reply_content', instance.reply_content))
+        serializer = self.get_serializer(
+            instance, data=mutable_data, partial=True)
+        if not serializer.is_valid():
+            return JsonResponse(serializer.errors, status="400")
+        try:
+            self.perform_update(serializer)
+            return JsonResponse({'post': serializer.data, }, status=200)
+
+        except ValidationError as err:
+            errorList = []
+            for e in err:
+                errorList.append(e[1])
+            return JsonResponse({
+                'non_field_errors': errorList,
+            }, status=400)
+
+        except Exception as err:
+            print(err)
+            return JsonResponse({
+                'non_field_errors': ['Unknown error (African Clawed Frog)'],
+            }, status=400)
