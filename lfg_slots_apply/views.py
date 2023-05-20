@@ -2,6 +2,7 @@ from rest_framework import generics, permissions, filters, pagination
 from django_filters.rest_framework import DjangoFilterBackend
 from squadup_api.permissions import IsOwnerOrReadOnly, IsGroupOwnerOrReadOnly
 from .models import LFGSlotApply
+from lfg_slots.models import LFG_Slot
 from .serializers import LFGSlotApplySerializer
 import bleach
 from django.core.exceptions import ValidationError
@@ -104,8 +105,12 @@ class LFGSlotUpdateDetail(generics.RetrieveUpdateAPIView):
         try:
             self.perform_update(serializer)
             # Change all awaiting requests for this slot to rejected.
-            query = Q(status="Awaiting") & Q(slot_id=instance.slot_id) & ~Q(pk=instance.pk)
+            query = Q(status="Awaiting") & Q(
+                slot_id=instance.slot_id) & ~Q(pk=instance.pk)
             LFGSlotApply.objects.filter(query).update(status="Rejected")
+            # Change status of slot to closed.
+            LFG_Slot.objects.filter(
+                pk=instance.slot_id).update(status="Closed")
             return JsonResponse({'post': serializer.data, }, status=200)
 
         except ValidationError as err:
