@@ -28,8 +28,8 @@ RANK_CHOICES = (
 
 STATUS_CHOICES = (
     ('Awaiting', 'Awaiting'),
-    ('Accept', 'Accept'),
-    ('Reject', 'Reject'),
+    ('Accepted', 'Accepted'),
+    ('Rejected', 'Rejected'),
 )
 
 
