@@ -42,6 +42,7 @@ class LFGSlotApply(models.Model):
     rank = models.CharField(choices=RANK_CHOICES,
                             max_length=9, blank=False, default='0')
     content = models.TextField(blank=True, max_length=100)
+    reply_content = models.TextField(blank=True, max_length=100)
     status = models.CharField(choices=STATUS_CHOICES,
                               max_length=8, blank=False, default='Awaiting')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -61,6 +62,8 @@ class LFGSlotApply(models.Model):
                 'You already have 5 open requests.')
         if len(self.content) > 100:
             errors['content'].append('Max length is 100 characters.')
+        if len(self.reply_content) > 100:
+            errors['reply_content'].append('Max length is 100 characters.')
         # If any above errors, raise ValidationError
         if errors:
             raise ValidationError(errors)
