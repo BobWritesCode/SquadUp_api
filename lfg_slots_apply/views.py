@@ -6,6 +6,7 @@ from .serializers import LFGSlotApplySerializer
 import bleach
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 class LFGSlotApplyList(generics.ListCreateAPIView):
@@ -96,10 +97,15 @@ class LFGSlotUpdateDetail(generics.RetrieveUpdateAPIView):
             request.data.get('reply_content', instance.reply_content))
         serializer = self.get_serializer(
             instance, data=mutable_data, partial=True)
+
         if not serializer.is_valid():
             return JsonResponse(serializer.errors, status="400")
+
         try:
             self.perform_update(serializer)
+            # Change all awaiting requests for this slot to rejected.
+            query = Q(status="Awaiting") & Q(slot_id=instance.slot_id) & ~Q(pk=instance.pk)
+            LFGSlotApply.objects.filter(query).update(status="Rejected")
             return JsonResponse({'post': serializer.data, }, status=200)
 
         except ValidationError as err:
