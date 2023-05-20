@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, permissions, filters, pagination
 from django_filters.rest_framework import DjangoFilterBackend
 from squadup_api.permissions import IsOwnerOrReadOnly
 from .models import LFGSlotApply
@@ -17,14 +17,31 @@ class LFGSlotApplyList(generics.ListCreateAPIView):
         filters.SearchFilter,
         DjangoFilterBackend
     ]
-    filterset_fields = ['slot', 'owner']
-    search_fields = ['slot', 'owner']
+    filterset_fields = ['slot', 'owner', 'status']
+    search_fields = ['slot', 'owner', 'status']
     ordering_fields = []
+
 
     def perform_create(self, serializer):
         if not serializer.is_valid():
             return JsonResponse(serializer.errors, status="400")
         serializer.save(owner=self.request.user)
+
+
+class LFGSlotApplyPagination(generics.ListAPIView):
+    serializer_class = LFGSlotApplySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = LFGSlotApply.objects.all().order_by('-id')
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend
+    ]
+    filterset_fields = ['slot', 'owner', 'status']
+    search_fields = ['slot', 'owner', 'status']
+    ordering_fields = []
+    pagination_class = pagination.LimitOffsetPagination
+    pagination_class.default_limit = 1
 
 
 class LFGSlotApplyDetail(generics.RetrieveUpdateDestroyAPIView):

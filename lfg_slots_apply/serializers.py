@@ -5,6 +5,7 @@ from lfg_slots_apply.models import LFGSlotApply
 
 class LFGSlotApplySerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    ownerID = serializers.ReadOnlyField(source='owner.id')
     is_owner = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
 
@@ -31,6 +32,7 @@ class LFGSlotApplySerializer(serializers.ModelSerializer):
             'content',
             'created_at',
             'owner',
+            'ownerID',
             'is_owner',
             'status',
         ]

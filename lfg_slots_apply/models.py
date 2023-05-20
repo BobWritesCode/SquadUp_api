@@ -57,7 +57,6 @@ class LFGSlotApply(models.Model):
         errors = defaultdict(list)
         query = Q(owner=request.user) & Q(status="Awaiting")
         if LFGSlotApply.objects.filter(query).count() == 5:
-            print('got here')
             errors['non_field_errors'].append(
                 'You already have 5 open requests.')
         if len(self.content) > 100:
