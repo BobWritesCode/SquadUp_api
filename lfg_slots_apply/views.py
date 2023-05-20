@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, filters, pagination
 from django_filters.rest_framework import DjangoFilterBackend
-from squadup_api.permissions import IsOwnerOrReadOnly
+from squadup_api.permissions import IsOwnerOrReadOnly, IsGroupOwnerOrReadOnly
 from .models import LFGSlotApply
 from .serializers import LFGSlotApplySerializer
 import bleach
@@ -20,7 +20,6 @@ class LFGSlotApplyList(generics.ListCreateAPIView):
     filterset_fields = ['slot', 'owner', 'status']
     search_fields = ['slot', 'owner', 'status']
     ordering_fields = []
-
 
     def perform_create(self, serializer):
         if not serializer.is_valid():
@@ -77,3 +76,14 @@ class LFGSlotApplyDetail(generics.RetrieveUpdateDestroyAPIView):
             return JsonResponse({
                 'non_field_errors': ['Unknown error (African Civet)'],
             }, status=400)
+
+
+class LFGSlotUpdateDetail(generics.RetrieveUpdateAPIView):
+    '''
+    View class.
+
+    Allows a group owner to view and updated a request application.
+    '''
+    serializer_class = LFGSlotApplySerializer
+    permission_classes = [IsGroupOwnerOrReadOnly]
+    queryset = LFGSlotApply.objects.annotate().order_by('-id')
