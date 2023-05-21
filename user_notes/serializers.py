@@ -13,7 +13,8 @@ class UserNoteSerializer(serializers.ModelSerializer):
     def validate(self, data):
         instance = UserNote(**data)
         # Perform model's clean function
-        instance.clean()
+        request = self.context['request']
+        instance.clean(request)
         return data
 
     class Meta:

@@ -21,11 +21,21 @@ class UserNote(models.Model):
         user_note = cls(owner=owner, target_user=target_user, content=content)
         return user_note
 
-    def clean(self):
+    def clean(self, request):
         # defaultdict auto creates key first time it is accessed.
         errors = defaultdict(list)
+
+        # Checks for when creating a new user note object.
+        if request.method == 'POST':
+            x = UserNote.objects.filter(
+                owner=request.user, target_user=self.target_user).count()
+            if x > 0:
+                errors['non_field_errors'].append(
+                    'Can only have one user note per other user.')
+
         if len(self.content) > 200:
             errors['content'].append('Max length is 200 characters.')
+
         # If any errors, raise ValidationError
         if errors:
             raise ValidationError(errors)

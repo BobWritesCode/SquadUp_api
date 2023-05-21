@@ -37,32 +37,22 @@ class UserNoteDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     queryset = UserNote.objects.annotate().order_by('-id')
 
-    def get(self, request, *args, **kwargs):
-        pk = self.kwargs.get('pk')
-        target_user = User.objects.get(pk=pk)
-        query = Q(owner=request.user) & Q(target_user=target_user)
-        user_note = UserNote.objects.filter(query).first()
-        # If note object exists, return contents.
-        if user_note:
-            return JsonResponse({
-                'user_note': [user_note.content],
-            }, status=200)
-        # If note object does not exists, return blanks string.
-        return JsonResponse({
-            'user_note': [''],
-        }, status=200)
-
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
-        request.data['content'] = bleach.clean(
+        # Crate a mutable copy of the request data
+        mutable_data = request.POST.copy()
+        mutable_data['content'] = bleach.clean(
             request.data.get('content', instance.content))
         serializer = self.get_serializer(
-            instance, data=request.data, partial=True)
+            instance, data=mutable_data, partial=True)
+
         if not serializer.is_valid():
             return JsonResponse(serializer.errors, status="400")
+
         try:
             self.perform_update(serializer)
-            return JsonResponse({'post': serializer.data, }, status=200)
+            return JsonResponse(serializer.data, status=200)
+
         except ValidationError as err:
             errorList = []
             for e in err:
@@ -74,5 +64,5 @@ class UserNoteDetail(generics.RetrieveUpdateDestroyAPIView):
         except Exception as err:
             print(err)
             return JsonResponse({
-                'non_field_errors': ['Unknown error (African buffalo)'],
+                'non_field_errors': ['Unknown error (African Buffalo)'],
             }, status=400)
