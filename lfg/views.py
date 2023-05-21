@@ -7,6 +7,7 @@ from .serializers import LFGSerializer
 from django.http import JsonResponse
 import json
 from django.core import serializers
+from .filters import LFGListFilter
 
 
 class LFGList(generics.ListCreateAPIView):
@@ -19,11 +20,10 @@ class LFGList(generics.ListCreateAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    filterset_fields = [
-        'owner', 'status',
-    ]
+    # Replace filterset_fields with filterset_class
+    filterset_class = LFGListFilter
     search_fields = [
-        'owner', 'status',
+        'owner', 'status', 'game_type'
     ]
     ordering_fields = [
     ]
