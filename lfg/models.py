@@ -5,9 +5,9 @@ from django.core.exceptions import ValidationError
 from collections import defaultdict
 
 GAME_TYPE_CHOICES = (
-    ('1', 'Competitive'),
-    ('2', 'Tournament'),
-    ('3', 'Casual'),
+    ('Competitive', 'Competitive'),
+    ('Tournament', 'Tournament'),
+    ('Casual', 'Casual'),
 )
 
 RANK_CHOICES = (
