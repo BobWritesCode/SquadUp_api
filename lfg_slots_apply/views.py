@@ -104,13 +104,15 @@ class LFGSlotUpdateDetail(generics.RetrieveUpdateAPIView):
 
         try:
             self.perform_update(serializer)
-            # Change all awaiting requests for this slot to rejected.
-            query = Q(status="Awaiting") & Q(
-                slot_id=instance.slot_id) & ~Q(pk=instance.pk)
-            LFGSlotApply.objects.filter(query).update(status="Rejected")
-            # Change status of slot to closed.
-            LFG_Slot.objects.filter(
-                pk=instance.slot_id).update(status="Closed")
+
+            if mutable_data['status'] == 'Accepted':
+                # Change all awaiting requests for this slot to rejected.
+                query = Q(status="Awaiting") & Q(
+                    slot_id=instance.slot_id) & ~Q(pk=instance.pk)
+                LFGSlotApply.objects.filter(query).update(status="Rejected")
+                # Change status of slot to closed.
+                LFG_Slot.objects.filter(
+                    pk=instance.slot_id).update(status="Closed")
             return JsonResponse({'post': serializer.data, }, status=200)
 
         except ValidationError as err:
