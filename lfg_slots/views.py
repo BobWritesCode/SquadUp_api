@@ -2,6 +2,7 @@ from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from squadup_api.permissions import IsOwnerOrReadOnly
 from .models import LFG_Slot
+from lfg.models import LFG
 from lfg_slots_apply.models import LFGSlotApply
 from .serializers import LFG_SlotSerializer
 from django.http import JsonResponse
@@ -58,6 +59,8 @@ class LFG_SlotReopen(generics.RetrieveUpdateDestroyAPIView):
             # Delete all requests that exist current for this slot.
             query = Q(slot=instance.id)
             LFGSlotApply.objects.filter(query).delete()
+            # Make sure group is open
+            LFG.objects.filter(pk=instance.lfg.id).update(status=True)
             return JsonResponse({'post': serializer.data, }, status=200)
 
         except ValidationError as err:

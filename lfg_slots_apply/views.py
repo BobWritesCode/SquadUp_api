@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from squadup_api.permissions import IsOwnerOrReadOnly, IsGroupOwnerOrReadOnly
 from .models import LFGSlotApply
 from lfg_slots.models import LFG_Slot
+from lfg.models import LFG
 from .serializers import LFGSlotApplySerializer
 import bleach
 from django.core.exceptions import ValidationError
@@ -58,6 +59,7 @@ class LFGSlotApplyDetail(generics.RetrieveUpdateDestroyAPIView):
             request.data.get('content', instance.content))
         serializer = self.get_serializer(
             instance, data=mutable_data, partial=True)
+
         if not serializer.is_valid():
             return JsonResponse(serializer.errors, status="400")
 
@@ -113,6 +115,15 @@ class LFGSlotUpdateDetail(generics.RetrieveUpdateAPIView):
                 # Change status of slot to closed.
                 LFG_Slot.objects.filter(
                     pk=instance.slot_id).update(status="Closed")
+
+                # Check how many slots are still open, if 0 close group.
+                lfg_slot = LFG_Slot.objects.get(pk=instance.slot_id)
+                lfg_slots = LFG_Slot.objects.filter(
+                    lfg=lfg_slot.lfg, status='Open')
+                if lfg_slots.count() == 0:
+                    LFG.objects.filter(pk=lfg_slot.lfg.id).update(status=False)
+                    # Group now closed.
+
             return JsonResponse({'post': serializer.data, }, status=200)
 
         except ValidationError as err:
