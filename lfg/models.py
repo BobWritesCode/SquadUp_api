@@ -11,16 +11,16 @@ GAME_TYPE_CHOICES = (
 )
 
 RANK_CHOICES = (
-    ('0', 'Unranked'),
-    ('1', 'Iron'),
-    ('2', 'Bronze'),
-    ('3', 'Silver'),
-    ('4', 'Gold'),
-    ('5', 'Platinum'),
-    ('6', 'Diamond'),
-    ('7', 'Ascendant'),
-    ('8', 'Immortal'),
-    ('9', 'Radiant'),
+    (0, 'Unranked'),
+    (1, 'Iron'),
+    (2, 'Bronze'),
+    (3, 'Silver'),
+    (4, 'Gold'),
+    (5, 'Platinum'),
+    (6, 'Diamond'),
+    (7, 'Ascendant'),
+    (8, 'Immortal'),
+    (9, 'Radiant'),
 )
 
 
@@ -34,9 +34,9 @@ class LFG(models.Model):
     current_team_size = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(9)], blank=False)
     lowest_rank = models.CharField(
-        choices=RANK_CHOICES, max_length=9, blank=False, default='0')
+        choices=RANK_CHOICES, max_length=9, blank=False, default=0)
     highest_rank = models.CharField(
-        choices=RANK_CHOICES, max_length=9, blank=False, default='0')
+        choices=RANK_CHOICES, max_length=9, blank=False, default=0)
     content = models.TextField(blank=True, max_length=200)
     status = models.BooleanField(default=True)
 
