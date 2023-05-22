@@ -20,7 +20,7 @@ class LFG_SlotList(generics.ListCreateAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    filterset_fields = ['lfg']
+    filterset_fields = ['lfg', 'role']
     search_fields = ['owner']
     ordering_fields = []
 
@@ -47,7 +47,7 @@ class LFG_SlotReopen(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         # Crate a mutable copy of the request data
         mutable_data = request.POST.copy()
-        mutable_data['status'] =  request.data.get('status', instance.status)
+        mutable_data['status'] = request.data.get('status', instance.status)
         serializer = self.get_serializer(
             instance, data=mutable_data, partial=True)
 
