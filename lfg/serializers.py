@@ -5,6 +5,7 @@ from lfg_slots.models import LFG_Slot
 
 class LFGSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    owner_id = serializers.ReadOnlyField(source='owner.pk')
     is_owner = serializers.SerializerMethodField()
     roles = serializers.SerializerMethodField()
 
@@ -27,6 +28,7 @@ class LFGSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'owner',
+            'owner_id',
             'game_type',
             'max_team_size',
             'current_team_size',
