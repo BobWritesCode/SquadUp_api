@@ -4,6 +4,7 @@ from .models import Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    email = serializers.ReadOnlyField(source='owner.email')
     is_owner = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
@@ -19,4 +20,5 @@ class ProfileSerializer(serializers.ModelSerializer):
             'image',
             'created_at',
             'is_owner',
+            'email',
         ]
