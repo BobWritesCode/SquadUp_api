@@ -128,4 +128,3 @@ def check_email(email: str):
     if re.match(pat, email) is None:
         return False
     return True
-
