@@ -11,6 +11,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.owner
 
+    def validate(self, data):
+        instance = Profile(**data)
+        # Perform model's clean function
+        instance.clean(self.context['request'])
+        return data
+
     class Meta:
         model = Profile
         fields = [

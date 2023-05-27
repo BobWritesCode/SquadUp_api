@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from cloudinary import uploader
 import urllib.parse
+from django.core.exceptions import ValidationError
+
 
 class ProfileList(generics.ListAPIView):
     """
@@ -29,6 +31,34 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ProfileSerializer
     queryset = Profile.objects.annotate().order_by('-owner')
+
+    def update(self, request, *args, **kwargs):
+        # Get the instance being updated
+        instance = self.get_object()
+
+        # Perform the update operation
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True)
+
+        if not serializer.is_valid():
+            return JsonResponse(serializer.errors, status=400)
+
+        try:
+            self.perform_update(serializer)
+            return JsonResponse({'post': serializer.data, }, status=200)
+
+        except ValidationError as err:
+            errorList = []
+            for e in err:
+                errorList.append(e[1])
+            return JsonResponse({
+                'non_field_errors': errorList,
+            }, status=400)
+
+        except Exception as err:
+            return JsonResponse({
+                'non_field_errors': ['Unknown error (African Civet)'],
+            }, status=400)
 
     def put(self, request, *args, **kwargs):
 
