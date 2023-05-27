@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from collections import defaultdict
 from django.core.files.images import get_image_dimensions
+import re
 
 
 class Profile(models.Model):
@@ -28,6 +29,7 @@ class Profile(models.Model):
         Validates data being saved to Post model.
         - image file size: Cannot be over 2mb.
         - image height: Cannot be over 1080 pixels.
+        - tracker: regx match check
 
         Decorators:
             None
@@ -38,7 +40,7 @@ class Profile(models.Model):
         """
         # defaultdict auto creates key first time it is accessed.
         errors = defaultdict(list)
-        if self.image:
+        if 'image' in request.data:
             max_size = 2 * 1024 * 1024  # 2MB
             max_height = 1080
             width, height = get_image_dimensions(self.image)
@@ -50,6 +52,12 @@ class Profile(models.Model):
             if height > max_height:
                 errors['image'].append(
                     'The image height cannot exceed 1080 pixels.')
+        if 'tracker' in request.data:
+            pattern = r'^\s*\w{0,20}\s*#\w{0,5}$'
+            if not re.match(pattern, request.data['tracker']) and request.data['tracker']:
+                errors['tracker'].append(
+                    'Format is incorrect, please check and follow instructions.')
+
         # If any above errors, raise ValidationError
         if errors:
             raise ValidationError(errors)
