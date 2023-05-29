@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from cloudinary import uploader
 from django.core import serializers
+import bleach
 
 
 class PostList(generics.ListCreateAPIView):
@@ -130,8 +131,15 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
             JsonResponse - Response provides feedback to request.
         """
         instance = self.get_object()
+        # Crate a mutable copy of the request data
+        mutable_data = request.POST.copy()
+
+        mutable_data['content'] = bleach.clean(
+            request.data.get('content', instance.content))
+        # Remove whitespaces at beginning and end of string.
+        mutable_data['content'].strip()
         serializer = self.get_serializer(
-            instance, data=request.data, partial=True)
+            instance, data=mutable_data, partial=True)
 
         if serializer.is_valid(raise_exception=True):
             try:
