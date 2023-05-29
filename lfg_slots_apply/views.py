@@ -9,6 +9,7 @@ import bleach
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.db.models import Q
+from collections import defaultdict
 
 
 class LFGSlotApplyList(generics.ListCreateAPIView):
@@ -24,10 +25,35 @@ class LFGSlotApplyList(generics.ListCreateAPIView):
     search_fields = ['slot', 'owner', 'status']
     ordering_fields = []
 
-    def perform_create(self, serializer):
-        if not serializer.is_valid():
-            return JsonResponse(serializer.errors, status="400")
-        serializer.save(owner=self.request.user)
+    def create(self, request, *args, **kwargs):
+        query = Q(owner=self.request.user) & Q(status="Awaiting")
+        try:
+
+            if LFGSlotApply.objects.filter(query).count() == 5:
+                errors = defaultdict(list)
+                errors['non_field_errors'].append(
+                    'You already have 5 open requests.')
+                raise ValidationError(errors)
+
+            slot = LFG_Slot.objects.get(pk=request.data['slot'])
+            role = request.data['role']
+            content = request.data['content']
+            now_slot = LFGSlotApply.create(
+                owner=request.user, slot=slot, role=role, content=content)
+            now_slot.save()
+
+        except ValidationError as err:
+            errorList = []
+            for e in err:
+                errorList.append(e[1])
+            return JsonResponse({
+                'non_field_errors': errorList,
+            }, status=400)
+
+        else:
+            return JsonResponse({
+                'success': ['Posted'],
+            }, status=200)
 
 
 class LFGSlotApplyPagination(generics.ListAPIView):

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from lfg_slots.models import LFG_Slot
 from collections import defaultdict
 from django.core.exceptions import ValidationError
-from django.db.models import Q
+
 
 ROLE_CHOICES = (
     ('Any', 'Any'),
@@ -53,13 +53,17 @@ class LFGSlotApply(models.Model):
     def __str__(self):
         return f'{self.id} - {self.role}'
 
+    @classmethod
+    def create(cls, owner, slot, role='Any', rank='0',
+               content: str = '', status='Awaiting'):
+        obj = cls(owner=owner, slot=slot, role=role, rank=rank,
+                  content=content, status=status)
+        return obj
+
     def clean(self, request):
+        print(self)
         # defaultdict auto creates key first time it is accessed.
         errors = defaultdict(list)
-        query = Q(owner=request.user) & Q(status="Awaiting")
-        if LFGSlotApply.objects.filter(query).count() == 5:
-            errors['non_field_errors'].append(
-                'You already have 5 open requests.')
         if len(self.content) > 100:
             errors['content'].append('Max length is 100 characters.')
 

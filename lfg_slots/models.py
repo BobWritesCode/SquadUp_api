@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from lfg.models import LFG
-
+from django.core.exceptions import ValidationError
+from collections import defaultdict
 
 ROLE_CHOICES = (
     ('Any', 'Any'),
@@ -39,3 +40,24 @@ class LFG_Slot(models.Model):
         slot = cls(owner=owner, lfg=lfg, role=role,
                    content=content, status=status)
         return slot
+
+    def clean(self):
+        """
+        Validates data being saved.
+        - content: max_length = 100 characters.
+
+        Decorators:
+            None
+        Args:
+            None
+        Returns:
+            None
+        """
+        # defaultdict auto creates key first time it is accessed.
+        errors = defaultdict(list)
+        if len(self.content) > 100:
+            errors['content'].append(
+                'Max length is 100 characters.')
+        # If any above errors, raise ValidationError
+        if errors:
+            raise ValidationError(errors)
