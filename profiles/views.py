@@ -1,5 +1,6 @@
 import re
 from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from squadup_api.permissions import IsOwnerOrReadOnly
 from .models import Profile
 from .serializers import ProfileSerializer
@@ -20,7 +21,17 @@ class ProfileList(generics.ListAPIView):
     queryset = Profile.objects.annotate().order_by('-owner')
     serializer_class = ProfileSerializer
     filter_backends = [
-        filters.OrderingFilter
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+    filterset_fields = [
+        'owner',
+    ]
+    search_fields = {
+        'owner__username': ['contains']
+    }
+    ordering_fields = [
     ]
 
 
