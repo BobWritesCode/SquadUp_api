@@ -45,7 +45,7 @@ class Post(models.Model):
             # Check file size not too large.
             if self.image.size > max_size:
                 errors['image'].append(
-                    'The image file should not exceed 2MB.')
+                    'The image file should not exceed 2MB. ')
             # Check the height.
             if height > max_height:
                 errors['image'].append(
