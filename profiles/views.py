@@ -84,7 +84,8 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
                     # Delete old image from Cloudinary server
                     try:
                         uploader.destroy(str(profile.image))
-                    except:
+                    except Exception:
+                        # Any error move on.
                         pass
 
                 if request.FILES:
@@ -131,7 +132,8 @@ def user_email(request: object, user_id: int = None):
         else:
             user.email = email
             user.save()
-            return JsonResponse({'message': 'Email address updated successfully.'}, status=200)
+            return JsonResponse(
+                {'message': 'Email address updated successfully.'}, status=200)
 
     if request.method == 'GET':
         return JsonResponse({

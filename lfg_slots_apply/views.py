@@ -76,7 +76,6 @@ class LFGSlotApplyDetail(generics.RetrieveUpdateDestroyAPIView):
             }, status=400)
 
         except Exception as err:
-            print(err)
             return JsonResponse({
                 'non_field_errors': ['Unknown error (African Civet)'],
             }, status=400)

@@ -26,19 +26,49 @@ RANK_CHOICES = (
 
 class LFG(models.Model):
 
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+        )
     game_type = models.CharField(
-        choices=GAME_TYPE_CHOICES, max_length=11, blank=False, default='Competitive')
+        choices=GAME_TYPE_CHOICES,
+        max_length=11,
+        blank=False,
+        default='Competitive'
+        )
     max_team_size = models.IntegerField(
-        validators=[MinValueValidator(2), MaxValueValidator(10)], blank=False)
+        validators=[
+            MinValueValidator(2),
+            MaxValueValidator(10)
+            ],
+        blank=False
+        )
     current_team_size = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)], blank=False)
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(9)
+            ],
+        blank=False
+        )
     lowest_rank = models.CharField(
-        choices=RANK_CHOICES, max_length=9, blank=False, default=0)
+        choices=RANK_CHOICES,
+        max_length=9,
+        blank=False,
+        default=0
+        )
     highest_rank = models.CharField(
-        choices=RANK_CHOICES, max_length=9, blank=False, default=0)
-    content = models.TextField(blank=True, max_length=200)
-    status = models.BooleanField(default=True)
+        choices=RANK_CHOICES,
+        max_length=9,
+        blank=False,
+        default=0
+        )
+    content = models.TextField(
+        blank=True,
+        max_length=200
+        )
+    status = models.BooleanField(
+        default=True
+        )
 
     class Meta:
         ordering = ['-id']
