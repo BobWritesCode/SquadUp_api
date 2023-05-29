@@ -41,7 +41,7 @@ class LFG_Slot(models.Model):
                    content=content, status=status)
         return slot
 
-    def clean(self):
+    def clean(self, request):
         """
         Validates data being saved.
         - content: max_length = 100 characters.
