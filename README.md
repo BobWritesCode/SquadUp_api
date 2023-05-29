@@ -1,5 +1,5 @@
-# Squad Up api
+# 1. Squad Up - API
 
-This is the bank end api for the web application Squad Up.
+![Showcase of site on different screen sizes](README_files/showcase.png)
 
-Front end repository:
+The documentation for this project can be found [here](https://github.com/BobWritesCode/squadup_frontend).
