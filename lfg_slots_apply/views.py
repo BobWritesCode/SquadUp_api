@@ -38,8 +38,10 @@ class LFGSlotApplyList(generics.ListCreateAPIView):
             slot = LFG_Slot.objects.get(pk=request.data['slot'])
             role = request.data['role']
             content = request.data['content']
+            rank = request.data['rank']
             now_slot = LFGSlotApply.create(
-                owner=request.user, slot=slot, role=role, content=content)
+                owner=request.user, slot=slot, role=role,
+                content=content, rank=rank)
             now_slot.save()
 
         except ValidationError as err:
