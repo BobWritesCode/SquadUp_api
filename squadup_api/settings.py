@@ -185,12 +185,10 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_REPLACE_HTTPS_REFERER = True
 
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get('CLIENT_ORIGIN_DEV'),
     os.environ.get('CLIENT_ORIGIN'),
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    os.environ.get('CLIENT_ORIGIN_DEV'),
     os.environ.get('CLIENT_ORIGIN'),
 ]
 
