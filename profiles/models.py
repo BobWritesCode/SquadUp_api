@@ -53,9 +53,9 @@ class Profile(models.Model):
                 errors['image'].append(
                     'The image height cannot exceed 1080 pixels.')
         if 'tracker' in request.data:
-            pattern = r'^\s*\w{0,20}\s*#\w{0,5}$'
-            if (not re.match(pattern, request.data['tracker']) and
-                    request.data['tracker']):
+            print(request.data['tracker'])
+            pattern = r'[a-zA-Z0-9 ]{0,30}#[a-zA-Z0-9]{1,5}'
+            if not re.match(pattern, request.data['tracker']):
                 errors['tracker'].append(
                     ('Format is incorrect, please check and follow '
                      'instructions.'))
